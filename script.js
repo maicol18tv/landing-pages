@@ -3,6 +3,7 @@
 
     // 1. Elementos del DOM
     const form = document.getElementById('bootcamp-form');
+    const container = document.querySelector('.register-container');
     const nombreInput = document.getElementById('nombre');
     const emailInput = document.getElementById('email');
     const experienciaSelect = document.getElementById('experiencia');
@@ -45,7 +46,6 @@
         localStorage.setItem(`${NAMESPACE}${llave}`, valor);
     };
 
-    // Escuchadores de eventos 'input' y 'change' para registrar cambios al escribir
     nombreInput.addEventListener('input', function () {
         guardarEnLocalStorage('nombre', nombreInput.value);
         validarCampo(nombreInput, document.getElementById('error-nombre'), 'Por favor, ingresa tu nombre completo.');
@@ -61,7 +61,46 @@
         validarCampo(experienciaSelect, document.getElementById('error-experiencia'), 'Debes seleccionar tu nivel de experiencia.');
     });
 
-    // 5. Escuchador del evento de envío (Submit)
+    // 5. NUEVO: Lógica de Restauración y Verificación de Estado
+    const mostrarMensajeAgradecimiento = (nombre) => {
+        form.style.display = 'none';
+        
+        const mensajeDiv = document.createElement('div');
+        mensajeDiv.className = 'converted-message';
+        mensajeDiv.innerHTML = `
+            <h3 style="color: var(--color-success); margin-bottom: 1rem; font-family: var(--font-heading); font-size: 1.5rem;">¡Registro Confirmado!</h3>
+            <p style="color: var(--color-text-main); font-size: 1.05rem; margin-bottom: 0.5rem;">Hola <strong>${nombre}</strong>, ya tienes un lugar reservado en nuestra lista de aspirantes prioritarios.</p>
+            <p style="color: var(--color-text-muted); font-size: 0.9rem;">Pronto enviaremos las credenciales de acceso a la sesión informativa a tu correo electrónico.</p>
+        `;
+        mensajeDiv.style.textAlign = 'center';
+        mensajeDiv.style.padding = '1rem 0';
+        
+        container.appendChild(mensajeDiv);
+    };
+
+    const restaurarYVerificarEstado = () => {
+        // Verificar si el usuario ya se convirtió (envió el formulario con éxito previamente)
+        const usuarioConvertido = localStorage.getItem(`${NAMESPACE}convertido`);
+        const nombreGuardado = localStorage.getItem(`${NAMESPACE}nombre`);
+
+        if (usuarioConvertido === 'true' && nombreGuardado) {
+            mostrarMensajeAgradecimiento(nombreGuardado);
+            return;
+        }
+
+        // Si no está convertido, restaurar los campos que tengan datos parciales guardados
+        if (nombreInput && localStorage.getItem(`${NAMESPACE}nombre`)) {
+            nombreInput.value = localStorage.getItem(`${NAMESPACE}nombre`);
+        }
+        if (emailInput && localStorage.getItem(`${NAMESPACE}email`)) {
+            emailInput.value = localStorage.getItem(`${NAMESPACE}email`);
+        }
+        if (experienciaSelect && localStorage.getItem(`${NAMESPACE}experiencia`)) {
+            experienciaSelect.value = localStorage.getItem(`${NAMESPACE}experiencia`);
+        }
+    };
+
+    // 6. Escuchador del evento de envío (Submit)
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -70,8 +109,13 @@
         const esExperienciaValida = validarCampo(experienciaSelect, document.getElementById('error-experiencia'), 'Debes seleccionar tu nivel de experiencia.');
 
         if (esNombreValido && esEmailValido && esExperienciaValida) {
-            console.log('Validación aprobada. Datos listos para el envío externo.');
+            // Simulamos conversión exitosa para este commit. En el siguiente configuraremos el fetch real.
+            localStorage.setItem(`${NAMESPACE}convertido`, 'true');
+            mostrarMensajeAgradecimiento(nombreInput.value.trim());
         }
     });
+
+    // Inicializar la configuración al cargar el script
+    restaurarYVerificarEstado();
 
 })();
