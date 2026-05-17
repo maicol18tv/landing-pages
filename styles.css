@@ -1,0 +1,33 @@
+:root {
+    /* Colores Principales */
+    --color-primary: #0f172a;
+    --color-secondary: #1e293b;
+    --color-accent: #7c3aed;
+    --color-accent-hover: #6d28d9;
+    
+    /* Colores de Texto y Estado */
+    --color-text-main: #f8fafc;
+    --color-text-muted: #94a3b8;
+    --color-success: #10b981;
+
+    /* Tipografías y Espaciados */
+    --font-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-body: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --spacing-base: 1rem;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+}
+
+/* Reset básico para asegurar que todo cargue limpio */
+* {
+    margin: 0;
+    padding: 0;
+    box-box-sizing: border-box;
+}
+
+body {
+    background-color: var(--color-primary);
+    color: var(--color-text-main);
+    font-family: var(--font-body);
+    line-height: 1.6;
+}
