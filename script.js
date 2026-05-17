@@ -1,13 +1,16 @@
 (function () {
     'use strict';
 
-    // Elementos del DOM
+    // 1. Elementos del DOM
     const form = document.getElementById('bootcamp-form');
     const nombreInput = document.getElementById('nombre');
     const emailInput = document.getElementById('email');
     const experienciaSelect = document.getElementById('experiencia');
 
-    // Funciones de validación
+    // 2. Prefijo único (Namespace) para las llaves de localStorage
+    const NAMESPACE = 'devskill_up_';
+
+    // 3. Funciones de validación
     const validarCampo = (input, elementoError, mensaje) => {
         if (!input.value.trim()) {
             elementoError.textContent = mensaje;
@@ -37,17 +40,37 @@
         }
     };
 
-    // Escuchador del evento de envío
+    // 4. Lógica de Autoguardado en tiempo real (Persistencia)
+    const guardarEnLocalStorage = (llave, valor) => {
+        localStorage.setItem(`${NAMESPACE}${llave}`, valor);
+    };
+
+    // Escuchadores de eventos 'input' y 'change' para registrar cambios al escribir
+    nombreInput.addEventListener('input', function () {
+        guardarEnLocalStorage('nombre', nombreInput.value);
+        validarCampo(nombreInput, document.getElementById('error-nombre'), 'Por favor, ingresa tu nombre completo.');
+    });
+
+    emailInput.addEventListener('input', function () {
+        guardarEnLocalStorage('email', emailInput.value);
+        validarEmail(emailInput, document.getElementById('error-email'));
+    });
+
+    experienciaSelect.addEventListener('change', function () {
+        guardarEnLocalStorage('experiencia', experienciaSelect.value);
+        validarCampo(experienciaSelect, document.getElementById('error-experiencia'), 'Debes seleccionar tu nivel de experiencia.');
+    });
+
+    // 5. Escuchador del evento de envío (Submit)
     form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Detener el envío por defecto
+        event.preventDefault();
 
         const esNombreValido = validarCampo(nombreInput, document.getElementById('error-nombre'), 'Por favor, ingresa tu nombre completo.');
         const esEmailValido = validarEmail(emailInput, document.getElementById('error-email'));
         const esExperienciaValida = validarCampo(experienciaSelect, document.getElementById('error-experiencia'), 'Debes seleccionar tu nivel de experiencia.');
 
         if (esNombreValido && esEmailValido && esExperienciaValida) {
-            console.log('Validación básica aprobada. Listo para guardar datos.');
-            // Aquí se conectará la persistencia en el siguiente commit
+            console.log('Validación aprobada. Datos listos para el envío externo.');
         }
     });
 
