@@ -100,7 +100,7 @@
         }
     };
 
-    // 6. Escuchador del evento de envío (Submit)
+   // 6. Escuchador del evento de envío (Submit) con Fetch API
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -109,9 +109,55 @@
         const esExperienciaValida = validarCampo(experienciaSelect, document.getElementById('error-experiencia'), 'Debes seleccionar tu nivel de experiencia.');
 
         if (esNombreValido && esEmailValido && esExperienciaValida) {
-            // Simulamos conversión exitosa para este commit. En el siguiente configuraremos el fetch real.
-            localStorage.setItem(`${NAMESPACE}convertido`, 'true');
-            mostrarMensajeAgradecimiento(nombreInput.value.trim());
+            // Cambiar el estado del botón mientras se procesa el envío
+            const submitBtn = document.getElementById('submit-btn');
+            const textoOriginalBtn = submitBtn.textContent;
+            submitBtn.textContent = 'Procesando registro...';
+            submitBtn.disabled = true;
+
+            // URL de tu formulario en Formspree (Reemplaza con tu ID real cuando te registres)
+            const FORMSPREE_URL = 'https://formspree.io/f/mqejzlky'; 
+
+            // Preparar los datos en un objeto legible para formato JSON / Formulario
+            const formData = {
+                nombre: nombreInput.value.trim(),
+                email: emailInput.value.trim(),
+                experiencia: experienciaSelect.value
+            };
+
+            // Petición HTTP POST al servicio externo
+            fetch(FORMSPREE_URL, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Éxito: Establecer estado de convertido en el cliente
+                    localStorage.setItem(`${NAMESPACE}convertido`, 'true');
+                    
+                    // Limpieza estricta de las variables residuales de inputs en localStorage
+                    localStorage.removeItem(`${NAMESPACE}nombre`);
+                    localStorage.removeItem(`${NAMESPACE}email`);
+                    localStorage.removeItem(`${NAMESPACE}experiencia`);
+
+                    // Renderizar interfaz de agradecimiento personalizada
+                    mostrarMensajeAgradecimiento(formData.nombre);
+                } else {
+                    throw new Error('Error en la respuesta del servidor externo.');
+                }
+            })
+            .catch(error => {
+                console.error('Error al enviar el formulario:', error);
+                alert('Hubo un problema de conexión al procesar tu solicitud. Por favor, inténtalo de nuevo.');
+                
+                // Restablecer el botón en caso de falla
+                submitBtn.textContent = textoOriginalBtn;
+                submitBtn.disabled = false;
+            });
         }
     });
 
