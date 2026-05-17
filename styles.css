@@ -31,3 +31,147 @@ body {
     font-family: var(--font-body);
     line-height: 1.6;
 }
+/* --- Barra de Navegación --- */
+.dev-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--spacing-base) * 1.5) calc(var(--spacing-base) * 2);
+    background-color: var(--color-secondary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.nav-logo {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.5px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: calc(var(--spacing-base) * 1.5);
+}
+
+.nav-links a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color var(--transition-speed);
+}
+
+.nav-links a:hover {
+    color: var(--color-text-main);
+}
+
+/* --- Sección Hero (Mobile-First) --- */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 70vh;
+    padding: calc(var(--spacing-base) * 3) var(--spacing-base);
+    background: radial-gradient(circle at top right, rgba(124, 58, 237, 0.08), transparent);
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-base);
+    color: var(--color-text-main);
+}
+
+.hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+    margin-bottom: calc(var(--spacing-base) * 2.5);
+}
+
+.hero-cta {
+    display: inline-block;
+    background-color: var(--color-accent);
+    color: var(--color-text-main);
+    padding: calc(var(--spacing-base) * 0.8) calc(var(--spacing-base) * 2);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color var(--transition-speed), transform 0.2s;
+}
+
+.hero-cta:hover {
+    background-color: var(--color-accent-hover);
+    transform: translateY(-2px);
+}
+
+/* --- Sección Propuesta de Valor / Beneficios --- */
+.benefits-section {
+    padding: calc(var(--spacing-base) * 4) var(--spacing-base);
+    background-color: var(--color-secondary);
+}
+
+.section-title {
+    font-family: var(--font-heading);
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: calc(var(--spacing-base) * 3);
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: calc(var(--spacing-base) * 1.5);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.benefit-card {
+    background-color: var(--color-primary);
+    padding: calc(var(--spacing-base) * 2);
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    transition: transform var(--transition-speed);
+}
+
+.benefit-card:hover {
+    transform: translateY(-5px);
+}
+
+.benefit-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    margin-bottom: calc(var(--spacing-base) * 0.8);
+    color: var(--color-text-main);
+}
+
+.benefit-text {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+}
+
+/* --- Media Queries para Escritorio (Pantallas Grandes) --- */
+@media (min-width: 768px) {
+    .hero-title {
+        font-size: 3.2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+
+    .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
