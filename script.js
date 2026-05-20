@@ -8,10 +8,30 @@
     const emailInput = document.getElementById('email');
     const experienciaSelect = document.getElementById('experiencia');
 
+    // Modal personalizado para errores
+    const dialogOverlay = document.getElementById('custom-dialog');
+    const dialogMessageEl = document.getElementById('dialog-message');
+    const dialogCloseBtn = document.getElementById('dialog-close-btn');
+
     // 2. Prefijo único (Namespace) para las llaves de localStorage
     const NAMESPACE = 'devskill_up_';
 
-    // 3. Funciones de validación
+    // 3. Funciones de diálogo personalizada (Reemplazo amigable de alert)
+    const mostrarDialogoError = (mensaje) => {
+        dialogMessageEl.textContent = mensaje;
+        dialogOverlay.classList.add('active');
+    };
+
+    dialogCloseBtn.addEventListener('click', () => {
+        dialogOverlay.classList.remove('active');
+    });
+
+    // Cerrar el diálogo al presionar Escape o hacer click fuera
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') dialogOverlay.classList.remove('active');
+    });
+
+    // 4. Funciones de validación
     const validarCampo = (input, elementoError, mensaje) => {
         if (!input.value.trim()) {
             elementoError.textContent = mensaje;
@@ -41,7 +61,7 @@
         }
     };
 
-    // 4. Lógica de Autoguardado en tiempo real (Persistencia)
+    // 5. Lógica de Autoguardado en tiempo real (Persistencia)
     const guardarEnLocalStorage = (llave, valor) => {
         localStorage.setItem(`${NAMESPACE}${llave}`, valor);
     };
@@ -61,7 +81,7 @@
         validarCampo(experienciaSelect, document.getElementById('error-experiencia'), 'Debes seleccionar tu nivel de experiencia.');
     });
 
-    // 5. NUEVO: Lógica de Restauración y Verificación de Estado
+    // 6. Lógica de Restauración y Verificación de Estado
     const mostrarMensajeAgradecimiento = (nombre) => {
         form.style.display = 'none';
         
@@ -79,7 +99,6 @@
     };
 
     const restaurarYVerificarEstado = () => {
-        // Verificar si el usuario ya se convirtió (envió el formulario con éxito previamente)
         const usuarioConvertido = localStorage.getItem(`${NAMESPACE}convertido`);
         const nombreGuardado = localStorage.getItem(`${NAMESPACE}nombre`);
 
@@ -88,7 +107,6 @@
             return;
         }
 
-        // Si no está convertido, restaurar los campos que tengan datos parciales guardados
         if (nombreInput && localStorage.getItem(`${NAMESPACE}nombre`)) {
             nombreInput.value = localStorage.getItem(`${NAMESPACE}nombre`);
         }
@@ -100,7 +118,7 @@
         }
     };
 
-   // 6. Escuchador del evento de envío (Submit) con Fetch API
+   // 7. Escuchador del evento de envío (Submit) con Fetch API
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -109,23 +127,20 @@
         const esExperienciaValida = validarCampo(experienciaSelect, document.getElementById('error-experiencia'), 'Debes seleccionar tu nivel de experiencia.');
 
         if (esNombreValido && esEmailValido && esExperienciaValida) {
-            // Cambiar el estado del botón mientras se procesa el envío
             const submitBtn = document.getElementById('submit-btn');
             const textoOriginalBtn = submitBtn.textContent;
             submitBtn.textContent = 'Procesando registro...';
             submitBtn.disabled = true;
 
-            // URL de tu formulario en Formspree (Reemplaza con tu ID real cuando te registres)
+            // URL del servicio de envío de formularios (Formspree)
             const FORMSPREE_URL = 'https://formspree.io/f/mqejzlky'; 
 
-            // Preparar los datos en un objeto legible para formato JSON / Formulario
             const formData = {
                 nombre: nombreInput.value.trim(),
                 email: emailInput.value.trim(),
                 experiencia: experienciaSelect.value
             };
 
-            // Petición HTTP POST al servicio externo
             fetch(FORMSPREE_URL, {
                 method: 'POST',
                 headers: {
@@ -136,15 +151,12 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // Éxito: Establecer estado de convertido en el cliente
                     localStorage.setItem(`${NAMESPACE}convertido`, 'true');
                     
-                    // Limpieza estricta de las variables residuales de inputs en localStorage
                     localStorage.removeItem(`${NAMESPACE}nombre`);
                     localStorage.removeItem(`${NAMESPACE}email`);
                     localStorage.removeItem(`${NAMESPACE}experiencia`);
 
-                    // Renderizar interfaz de agradecimiento personalizada
                     mostrarMensajeAgradecimiento(formData.nombre);
                 } else {
                     throw new Error('Error en la respuesta del servidor externo.');
@@ -152,16 +164,16 @@
             })
             .catch(error => {
                 console.error('Error al enviar el formulario:', error);
-                alert('Hubo un problema de conexión al procesar tu solicitud. Por favor, inténtalo de nuevo.');
+                // MEJORA PRÁCTICAS RECOMENDADAS: Evitamos el "alert" nativo usando nuestro modal CSS/JS
+                mostrarDialogoError('Hubo un problema de conexión al procesar tu solicitud. Por favor, inténtalo de nuevo.');
                 
-                // Restablecer el botón en caso de falla
                 submitBtn.textContent = textoOriginalBtn;
                 submitBtn.disabled = false;
             });
         }
     });
 
-    // Inicializar la configuración al cargar el script
+    // Inicializar al arrancar
     restaurarYVerificarEstado();
 
 })();
