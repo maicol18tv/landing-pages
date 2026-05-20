@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DevSkill Up — Bootcamp de JavaScript Moderno</title>
+    <meta name="description" content="Domina la lógica de programación y asincronismo en JavaScript puro de cero a experto con el Bootcamp intensivo de DevSkill Up.">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -47,6 +48,7 @@
                 </article>
             </div>
         </section>
+
         <section id="caracteristicas" class="features-section">
             <h2 class="section-title">Un Método Diseñado para tu Crecimiento Técnico</h2>
             <div class="features-container">
@@ -73,23 +75,24 @@
             <div class="testimonials-grid">
                 <article class="testimonial-card">
                     <p class="testimonial-text">"Antes de entrar a DevSkill Up copiaba y pegaba scripts sin entender el asincronismo. Dominar JavaScript puro cambió por completo mi nivel técnico."</p>
-                    <h3 class="testimonial-author">Alejandro Gómez</h3>
+                    <p class="testimonial-author">Alejandro Gómez</p>
                     <span class="testimonial-role">Estudiante de Sistemas</span>
                 </article>
 
                 <article class="testimonial-card">
                     <p class="testimonial-text">"La sección donde te enseñan a auditar tu propio código y medir el rendimiento me dio una ventaja enorme en mi primera entrevista técnica."</p>
-                    <h3 class="testimonial-author">Laura Mendoza</h3>
+                    <p class="testimonial-author">Laura Mendoza</p>
                     <span class="testimonial-role">Desarrolladora Frontend Junior</span>
                 </article>
 
                 <article class="testimonial-card">
                     <p class="testimonial-text">"Estructurar la lógica sin depender de librerías me dio la confianza que necesitaba. Ahora entiendo qué pasa detrás de cada línea de código."</p>
-                    <h3 class="testimonial-author">Carlos Buendía</h3>
+                    <p class="testimonial-author">Carlos Buendía</p>
                     <span class="testimonial-role">Fullstack Developer</span>
                 </article>
             </div>
         </section>
+
         <section id="registro" class="register-section">
             <div class="register-container">
                 <h2 class="section-title">Iníciate en el Camino del Código Limpio</h2>
@@ -124,6 +127,15 @@
             </div>
         </section>
     </main>
+
+    <div id="custom-dialog" class="custom-dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+        <div class="custom-dialog">
+            <div class="dialog-icon">⚠️</div>
+            <h3 id="dialog-title" class="dialog-title">Ups, algo salió mal</h3>
+            <p id="dialog-message" class="dialog-message">Hubo un problema de conexión al procesar tu solicitud. Por favor, inténtalo de nuevo.</p>
+            <button id="dialog-close-btn" class="dialog-button">Entendido</button>
+        </div>
+    </div>
 
     <footer>
         <div class="footer-container">
