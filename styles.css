@@ -7,8 +7,11 @@
     
     /* Colores de Texto y Estado */
     --color-text-main: #f8fafc;
-    --color-text-muted: #94a3b8;
+    /* MEJORA ACCESIBILIDAD: Gris aclarado para cumplir holgadamente con el contraste WCAG AA/AAA */
+    --color-text-muted: #cbd5e1;
     --color-success: #10b981;
+    /* MEJORA ACCESIBILIDAD: Rojo coral claro para alto contraste sobre fondos oscuros (#1e293b) */
+    --color-danger: #f87171;
 
     /* Tipografías y Espaciados */
     --font-heading: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -22,7 +25,7 @@
 * {
     margin: 0;
     padding: 0;
-    box-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
@@ -30,7 +33,9 @@ body {
     color: var(--color-text-main);
     font-family: var(--font-body);
     line-height: 1.6;
+    overflow-x: hidden;
 }
+
 /* --- Barra de Navegación --- */
 .dev-nav {
     display: flex;
@@ -39,6 +44,9 @@ body {
     padding: calc(var(--spacing-base) * 1.5) calc(var(--spacing-base) * 2);
     background-color: var(--color-secondary);
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .nav-logo {
@@ -157,24 +165,6 @@ body {
     font-size: 0.95rem;
 }
 
-/* --- Media Queries para Escritorio (Pantallas Grandes) --- */
-@media (min-width: 768px) {
-    .hero-title {
-        font-size: 3.2rem;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.25rem;
-    }
-
-    .section-title {
-        font-size: 2.2rem;
-    }
-
-    .benefits-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
 /* --- Sección Características --- */
 .features-section {
     padding: calc(var(--spacing-base) * 4) var(--spacing-base);
@@ -242,10 +232,13 @@ body {
     margin-bottom: var(--spacing-base);
 }
 
+/* MEJORA SEMÁNTICA: Reemplazado h3 por clase estructurada */
 .testimonial-author {
     font-family: var(--font-heading);
     font-size: 1.1rem;
+    font-weight: 700;
     color: var(--color-text-main);
+    margin-bottom: 0.1rem;
 }
 
 .testimonial-role {
@@ -254,12 +247,6 @@ body {
     display: block;
 }
 
-/* --- Ajustes Responsivos --- */
-@media (min-width: 768px) {
-    .testimonials-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
 /* --- Sección de Registro --- */
 .register-section {
     padding: calc(var(--spacing-base) * 4) var(--spacing-base);
@@ -272,6 +259,7 @@ body {
     padding: calc(var(--spacing-base) * 2.5);
     border-radius: var(--border-radius);
     border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 .register-description {
@@ -308,19 +296,27 @@ body {
     color: var(--color-text-main);
     font-family: var(--font-body);
     font-size: 1rem;
-    transition: border-color var(--transition-speed);
+    transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+/* MEJORA ACCESIBILIDAD: Placeholder explícito de alto contraste */
+.form-group input::placeholder {
+    color: #94a3b8;
+    opacity: 1;
 }
 
 .form-group input:focus, 
 .form-group select:focus {
     outline: none;
     border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
 }
 
 .error-message {
-    color: #ef4444;
+    color: var(--color-danger);
     font-size: 0.8rem;
     min-height: 1.2rem;
+    font-weight: 500;
 }
 
 .submit-button {
@@ -332,13 +328,99 @@ body {
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color var(--transition-speed);
+    transition: background-color var(--transition-speed), transform 0.1s;
     margin-top: var(--spacing-base);
 }
 
 .submit-button:hover {
     background-color: var(--color-accent-hover);
 }
+
+.submit-button:active {
+    transform: scale(0.98);
+}
+
+.submit-button:disabled {
+    background-color: #4b5563;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* --- Custom Dialog / Modal de Error (Reemplazo de alert) --- */
+.custom-dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.custom-dialog-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.custom-dialog {
+    background-color: var(--color-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.custom-dialog-overlay.active .custom-dialog {
+    transform: scale(1);
+}
+
+.dialog-icon {
+    font-size: 3rem;
+    color: var(--color-danger);
+    margin-bottom: 1rem;
+}
+
+.dialog-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--color-text-main);
+}
+
+.dialog-message {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.dialog-button {
+    background-color: var(--color-accent);
+    color: var(--color-text-main);
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.dialog-button:hover {
+    background-color: var(--color-accent-hover);
+}
+
 /* --- Estilos del Footer --- */
 footer {
     background-color: var(--color-secondary);
@@ -371,18 +453,40 @@ footer {
     margin-bottom: calc(var(--spacing-base) * 0.4);
 }
 
+/* MEJORA ACCESIBILIDAD: Cambiado de rgba(255,255,255,0.3) a un color sólido de alto contraste */
 .footer-legal .legal-text {
     font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.3);
+    color: #94a3b8;
 }
 
-/* --- Ajuste Responsivo Footer --- */
+/* --- Media Queries para Escritorio --- */
 @media (min-width: 768px) {
+    .hero-title {
+        font-size: 3.2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 2.2rem;
+    }
+
+    .benefits-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .testimonials-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
     .footer-container {
         flex-direction: row;
         justify-content: space-between;
         text-align: left;
     }
+    
     .footer-legal {
         text-align: right;
         max-width: 50%;
