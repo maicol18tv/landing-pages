@@ -118,7 +118,7 @@
         }
     };
 
-   // 7. Escuchador del evento de envío (Submit) con Fetch API
+    // 7. Escuchador del evento de envío (Submit) con Fetch API
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -164,7 +164,6 @@
             })
             .catch(error => {
                 console.error('Error al enviar el formulario:', error);
-                // MEJORA PRÁCTICAS RECOMENDADAS: Evitamos el "alert" nativo usando nuestro modal CSS/JS
                 mostrarDialogoError('Hubo un problema de conexión al procesar tu solicitud. Por favor, inténtalo de nuevo.');
                 
                 submitBtn.textContent = textoOriginalBtn;
@@ -177,3 +176,17 @@
     restaurarYVerificarEstado();
 
 })();
+
+// 2. SCRIPT DE REGISTRO DEL SERVICE WORKER (PWA)
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // Registro relativo para asegurar funcionamiento correcto en subcarpetas de GitHub Pages
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => {
+                console.log('PWA: Service Worker registrado con éxito en el scope:', reg.scope);
+            })
+            .catch(err => {
+                console.error('PWA: Error al registrar el Service Worker:', err);
+            });
+    });
+}
